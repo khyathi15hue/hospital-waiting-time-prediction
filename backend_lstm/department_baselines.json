@@ -1,0 +1,62 @@
+{
+  "General Surgery": {
+    "avg_consult_minutes": 19.24828722009684,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.233,
+    "avg_staff_to_patient_ratio": 0.3057312252964427
+  },
+  "Obstetrics": {
+    "avg_consult_minutes": 18.902979902995842,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.221,
+    "avg_staff_to_patient_ratio": 0.3095426195426195
+  },
+  "Neurology": {
+    "avg_consult_minutes": 18.68373413487174,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.23,
+    "avg_staff_to_patient_ratio": 0.2940881763527054
+  },
+  "Orthopedics": {
+    "avg_consult_minutes": 18.82771002704472,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.227,
+    "avg_staff_to_patient_ratio": 0.3008739837398374
+  },
+  "Pediatrics": {
+    "avg_consult_minutes": 18.46261859583871,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.243,
+    "avg_staff_to_patient_ratio": 0.2939089184060721
+  },
+  "Cardiology": {
+    "avg_consult_minutes": 18.813195876094845,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.223,
+    "avg_staff_to_patient_ratio": 0.2968041237113402
+  },
+  "Internal Medicine": {
+    "avg_consult_minutes": 18.646402640287132,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.233,
+    "avg_staff_to_patient_ratio": 0.2985742574257426
+  },
+  "Radiology": {
+    "avg_consult_minutes": 18.23588957048057,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.225,
+    "avg_staff_to_patient_ratio": 0.3077300613496932
+  },
+  "Emergency": {
+    "avg_consult_minutes": 18.615912208596708,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.224,
+    "avg_staff_to_patient_ratio": 0.3088888888888889
+  },
+  "Oncology": {
+    "avg_consult_minutes": 18.68644654083774,
+    "typical_providers_on_shift": 5,
+    "avg_arrival_rate_per_hour": 0.245,
+    "avg_staff_to_patient_ratio": 0.30518867924528303
+  }
+}

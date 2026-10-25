@@ -1,0 +1,109 @@
+{
+  "AgeGroup": [
+    "Adult (36-60)",
+    "Pediatric (0-17)",
+    "Senior (61+)",
+    "Young Adult (18-35)"
+  ],
+  "Department": [
+    "Cardiology",
+    "Emergency",
+    "General Surgery",
+    "Internal Medicine",
+    "Neurology",
+    "Obstetrics",
+    "Oncology",
+    "Orthopedics",
+    "Pediatrics",
+    "Radiology"
+  ],
+  "AppointmentType": [
+    "Follow-up",
+    "New Patient",
+    "Specialist Referral",
+    "Urgent Care"
+  ],
+  "InsuranceType": [
+    "Medicaid",
+    "Medicare",
+    "Private",
+    "Self-pay"
+  ],
+  "ArrivalMethod": [
+    "Emergency",
+    "Scheduled",
+    "Walk-in"
+  ],
+  "TriageCategory": [
+    "Emergency",
+    "Immediate",
+    "Non-urgent",
+    "Semi-urgent",
+    "Urgent"
+  ],
+  "ProviderID": [
+    "DR1",
+    "DR10",
+    "DR11",
+    "DR12",
+    "DR13",
+    "DR14",
+    "DR15",
+    "DR16",
+    "DR17",
+    "DR18",
+    "DR19",
+    "DR2",
+    "DR20",
+    "DR21",
+    "DR22",
+    "DR23",
+    "DR24",
+    "DR25",
+    "DR26",
+    "DR27",
+    "DR28",
+    "DR29",
+    "DR3",
+    "DR30",
+    "DR31",
+    "DR32",
+    "DR33",
+    "DR34",
+    "DR35",
+    "DR36",
+    "DR37",
+    "DR38",
+    "DR39",
+    "DR4",
+    "DR40",
+    "DR41",
+    "DR42",
+    "DR43",
+    "DR44",
+    "DR45",
+    "DR46",
+    "DR47",
+    "DR48",
+    "DR49",
+    "DR5",
+    "DR50",
+    "DR6",
+    "DR7",
+    "DR8",
+    "DR9"
+  ],
+  "DayOfWeek": [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Tue",
+    "Wed"
+  ],
+  "BookingType": [
+    "Online",
+    "Walk-in"
+  ]
+}

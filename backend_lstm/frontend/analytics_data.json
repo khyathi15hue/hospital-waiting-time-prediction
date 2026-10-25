@@ -1,0 +1,85 @@
+{
+  "mae_comparison": {
+    "labels": [
+      "Historical Avg",
+      "XGBoost",
+      "Hybrid (Log)",
+      "M/M/c (Queue)",
+      "XGBoost + Live Queue",
+      "LSTM + Live Queue"
+    ],
+    "values": [
+      28.77,
+      28.18,
+      27.84,
+      49.46,
+      27.85,
+      28.45
+    ]
+  },
+  "triage_distribution": {
+    "Non-urgent": 41.3,
+    "Semi-urgent": 29.6,
+    "Urgent": 19.2,
+    "Emergency": 8.0,
+    "Immediate": 1.9
+  },
+  "avg_wait_by_triage": {
+    "Emergency": 12.8,
+    "Immediate": 5.0,
+    "Non-urgent": 74.7,
+    "Semi-urgent": 49.7,
+    "Urgent": 26.2
+  },
+  "hourly_predicted_vs_actual": {
+    "hours": [
+      "8:00",
+      "9:00",
+      "10:00",
+      "11:00",
+      "12:00",
+      "13:00",
+      "14:00",
+      "15:00",
+      "16:00",
+      "17:00"
+    ],
+    "actual": [
+      42.6,
+      52.1,
+      48.4,
+      52.0,
+      46.2,
+      60.6,
+      46.6,
+      56.3,
+      51.2,
+      164.8
+    ],
+    "predicted": [
+      40.099998474121094,
+      42.400001525878906,
+      41.099998474121094,
+      41.599998474121094,
+      39.70000076293945,
+      44.599998474121094,
+      41.29999923706055,
+      45.099998474121094,
+      46.900001525878906,
+      51.400001525878906
+    ]
+  },
+  "total_records": 5000,
+  "departments": [
+    "Cardiology",
+    "Emergency",
+    "General Surgery",
+    "Internal Medicine",
+    "Neurology",
+    "Obstetrics",
+    "Oncology",
+    "Orthopedics",
+    "Pediatrics",
+    "Radiology"
+  ]
+}

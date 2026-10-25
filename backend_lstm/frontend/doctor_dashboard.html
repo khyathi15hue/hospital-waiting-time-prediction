@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CareWell Hospital — Doctor Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F7FB; --card: #FFFFFF; --ink: #0F2A4A; --muted: #64748B; --line: #E2E8F0;
+    --blue: #2563EB; --blue-tint: #EFF4FE; --navy: #0B1E3A; --navy-hi: #16294B;
+    --green: #16A34A; --amber: #D97706; --red: #DC2626;
+    --shadow: 0 1px 2px rgba(15,42,74,.04), 0 8px 24px rgba(15,42,74,.06);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); display: flex; }
+  h1, h2, .brand-name { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .sidebar { width: 230px; flex-shrink: 0; background: var(--navy); color: white; min-height: 100vh; display: flex; flex-direction: column; padding: 22px 16px; }
+  .side-brand { display: flex; align-items: center; gap: 10px; padding: 6px 8px 22px; }
+  .side-logo { width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; }
+  .side-brand-name { font-weight: 700; font-size: 15px; }
+  .side-tagline { font-size: 10.5px; color: #94A3B8; }
+  .nav-item { display: flex; align-items: center; gap: 11px; padding: 11px 12px; border-radius: 9px; margin-bottom: 4px; color: #CBD5E1; font-size: 13.5px; font-weight: 500; cursor: pointer; }
+  .nav-item.active { background: var(--blue); color: white; }
+  .nav-item:hover:not(.active) { background: var(--navy-hi); }
+  .nav-spacer { flex: 1; }
+  .nav-item.logout { color: #94A3B8; }
+  .main { flex: 1; padding: 28px 36px 60px; }
+  .top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 26px; }
+  .top-row h1 { font-size: 22px; margin: 0 0 4px; display: flex; align-items: center; gap: 10px; }
+  .top-row .datetime { font-size: 13px; color: var(--muted); }
+  .doc-chip { display: flex; align-items: center; gap: 10px; }
+  .doc-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--blue-tint); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--blue); font-size: 13px; }
+  .doc-name { font-size: 13.5px; font-weight: 600; }
+  .doc-role { font-size: 11.5px; color: var(--muted); }
+  .dept-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .dept-header h2 { font-size: 17px; margin: 0; }
+  select.dept-select { padding: 8px 30px 8px 12px; font-size: 13.5px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 22px; }
+  .stat-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 14px; }
+  .stat-icon { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .stat-label { font-size: 12.5px; color: var(--muted); }
+  .stat-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; }
+  .queue-table { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); padding: 12px 16px; border-bottom: 1px solid var(--line); font-weight: 600; }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  tr:last-child td { border-bottom: none; }
+  .triage-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+  .triage-Emergency, .triage-Immediate { background: #FEE2E2; color: var(--red); }
+  .triage-Urgent { background: #FEF3C7; color: var(--amber); }
+  .triage-Semi-urgent { background: #FEF9C3; color: #A16207; }
+  .triage-Non-urgent { background: #DCFCE7; color: #15803D; }
+  .status-tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+  .status-waiting { background: #F1F5F9; color: var(--muted); }
+  .status-in_progress { background: var(--blue-tint); color: var(--blue); }
+  .wait-cell { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; }
+  .action-btn { padding: 7px 16px; border-radius: 7px; border: none; font-size: 12.5px; font-weight: 700; cursor: pointer; }
+  .action-btn.start { background: var(--green); color: white; }
+  .action-btn.done { background: var(--navy); color: white; }
+  .action-btn:hover { opacity: 0.88; }
+  .empty-row { padding: 50px 20px; text-align: center; color: var(--muted); }
+  .qt-panel { display: flex; gap: 14px; margin-bottom: 22px; }
+  .qt-card { flex: 1; background: var(--navy); border-radius: 14px; padding: 16px 20px; color: white; }
+  .qt-symbol { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 700; color: #7FB3FF; }
+  .qt-label { font-size: 11px; color: #94A3B8; margin: 2px 0 6px; }
+  .qt-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="side-brand"><div class="side-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="white" stroke-width="3" stroke-linecap="round"/></svg></div><div><div class="side-brand-name">CareWell</div><div class="side-tagline">Doctor Dashboard</div></div></div>
+  <div class="nav-item active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/></svg> Queue Management</div>
+  <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Start Consultation</div>
+  <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 19V5a2 2 0 012-2h12a2 2 0 012 2v14l-3-2-3 2-3-2-3 2-3-2-2 2z" stroke="currentColor" stroke-width="1.8"/></svg> Patient History</div>
+  <div class="nav-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M19 12a7 7 0 00-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 00-2-1.2L14 3h-4l-.5 2.6a7 7 0 00-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 005 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1c.6.5 1.3.9 2 1.2L10 21h4l.5-2.6c.7-.3 1.4-.7 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z" stroke="currentColor" stroke-width="1.6"/></svg> Settings</div>
+  <div class="nav-spacer"></div>
+  <div class="nav-item logout"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Logout</div>
+</div>
+<div class="main">
+  <div class="top-row">
+    <div><h1><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#0F2A4A" stroke-width="2"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#0F2A4A" stroke-width="2"/></svg> Doctor Dashboard</h1><div class="datetime" id="datetime">--</div></div>
+    <div class="doc-chip"><div class="doc-avatar" id="docInitial">D</div><div><div class="doc-name" id="docName">Dr. Smith</div><div class="doc-role">Attending Physician</div></div></div>
+  </div>
+  <div class="dept-header">
+    <h2>Live Queue —</h2>
+    <select class="dept-select" id="deptSelect"><option>Cardiology</option><option>Emergency</option><option>General Surgery</option><option>Internal Medicine</option><option>Neurology</option><option>Obstetrics</option><option>Oncology</option><option>Orthopedics</option><option>Pediatrics</option><option>Radiology</option></select>
+  </div>
+  <div class="qt-panel">
+    <div class="qt-card"><div class="qt-symbol">λ</div><div class="qt-label">Arrival rate (patients/hour)</div><div class="qt-value" id="qtLambda">--</div></div>
+    <div class="qt-card"><div class="qt-symbol">μ</div><div class="qt-label">Service rate per server (patients/hour)</div><div class="qt-value" id="qtMu">--</div></div>
+    <div class="qt-card"><div class="qt-symbol">ρ</div><div class="qt-label">Utilization (λ / c·μ)</div><div class="qt-value" id="qtRho">--</div></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-icon" style="background:#EFF4FE"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2M23 11h-6M20 8v6" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#2563EB" stroke-width="2"/></svg></div><div><div class="stat-label">Total Waiting</div><div class="stat-value" id="totalWaiting">--</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:#FEF3C7"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#D97706" stroke-width="2"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#D97706" stroke-width="2"/></svg></div><div><div class="stat-label">In Consultation</div><div class="stat-value" id="inConsultation">--</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:#DCFCE7"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="stat-label">Completed Today</div><div class="stat-value" id="completedToday">--</div></div></div>
+  </div>
+  <div class="queue-table">
+    <table>
+      <thead><tr><th>#</th><th>Patient ID</th><th>Triage</th><th>Arrival Time</th><th>Predicted Wait</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+      <tbody id="queueBody"><tr><td colspan="7" class="empty-row">Loading queue…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+<script>
+  const API_BASE = "";
+  const deptSelect = document.getElementById("deptSelect");
+  function updateDatetime() {
+    const now = new Date();
+    document.getElementById("datetime").textContent = now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" }) + "  " + now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  }
+  updateDatetime();
+  setInterval(updateDatetime, 30000);
+  function timeOnly(isoString) { return new Date(isoString + "Z").toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }); }
+  async function loadStats() {
+    const department = deptSelect.value;
+    try {
+      const res = await fetch(`${API_BASE}/stats/${department}`);
+      if (!res.ok) return;
+      const s = await res.json();
+      document.getElementById("totalWaiting").textContent = s.total_waiting;
+      document.getElementById("inConsultation").textContent = s.in_consultation;
+      document.getElementById("completedToday").textContent = s.completed_today;
+    } catch (e) {}
+  }
+  async function loadQueue() {
+    const department = deptSelect.value;
+    document.querySelector(".dept-header h2").textContent = `Live Queue — ${department}`;
+    try {
+      const res = await fetch(`${API_BASE}/queue/${department}`);
+      if (!res.ok) throw new Error();
+      const entries = await res.json();
+      render(entries);
+    } catch (e) {
+      document.getElementById("queueBody").innerHTML = `<tr><td colspan="7" class="empty-row">Can't reach the server</td></tr>`;
+    }
+    loadStats();
+    loadQueueingMetrics();
+  }
+
+  async function loadQueueingMetrics() {
+    const department = deptSelect.value;
+    try {
+      const res = await fetch(`${API_BASE}/queueing_metrics/${department}?providers_on_shift=3`);
+      if (!res.ok) return;
+      const m = await res.json();
+      document.getElementById("qtLambda").textContent = m.lambda_per_hour.toFixed(2);
+      document.getElementById("qtMu").textContent = m.mu_per_hour_per_server.toFixed(2);
+      document.getElementById("qtRho").textContent = m.rho.toFixed(3);
+    } catch (e) {}
+  }
+  function render(entries) {
+    const body = document.getElementById("queueBody");
+    if (entries.length === 0) { body.innerHTML = `<tr><td colspan="7" class="empty-row">No patients waiting in this department.</td></tr>`; return; }
+    body.innerHTML = entries.map((e, i) => `
+      <tr>
+        <td>${i + 1}</td><td><b>${e.patient_id}</b></td>
+        <td><span class="triage-badge triage-${e.triage_category}">${e.triage_category}</span></td>
+        <td>${timeOnly(e.checkin_time)}</td>
+        <td class="wait-cell">${Math.round(e.predicted_wait_minutes ?? 0)} min</td>
+        <td><span class="status-tag status-${e.status}">${e.status === "in_progress" ? "In Progress" : "Waiting"}</span></td>
+        <td style="text-align:right;">${e.status === "waiting" ? `<button class="action-btn start" onclick="startConsult('${e.patient_id}')">Start</button>` : `<button class="action-btn done" onclick="completeConsult('${e.patient_id}')">Done</button>`}</td>
+      </tr>`).join("");
+  }
+  async function startConsult(patientId) { await fetch(`${API_BASE}/start_consult/${patientId}`, { method: "POST" }); loadQueue(); }
+  async function completeConsult(patientId) { await fetch(`${API_BASE}/consult_complete`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ patient_id: patientId }) }); loadQueue(); }
+  deptSelect.addEventListener("change", loadQueue);
+  loadQueue();
+  setInterval(loadQueue, 5000);
+</script>
+</body>
+</html>

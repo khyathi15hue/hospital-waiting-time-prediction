@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CareWell Hospital — Patient Check-In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F7FB; --card: #FFFFFF; --ink: #0F2A4A; --muted: #64748B; --line: #E2E8F0;
+    --blue: #2563EB; --blue-dark: #1D4ED8; --blue-tint: #EFF4FE; --green: #16A34A;
+    --shadow: 0 1px 2px rgba(15,42,74,.04), 0 8px 24px rgba(15,42,74,.06);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+  h1, h2, h3, .brand-name { font-family: 'Plus Jakarta Sans', sans-serif; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 18px 40px; background: var(--card); border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 40px; height: 40px; border-radius: 10px; background: var(--blue-tint); display: flex; align-items: center; justify-content: center; }
+  .brand-name { font-weight: 700; font-size: 18px; }
+  .tagline { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  nav { display: flex; gap: 28px; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; }
+  .layout { max-width: 1180px; margin: 0 auto; padding: 48px 40px 80px; display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 40px; }
+  .welcome h1 { font-size: 32px; margin: 0 0 10px; }
+  .welcome p { color: var(--muted); font-size: 15px; line-height: 1.6; margin: 0 0 32px; max-width: 380px; }
+  .feature { display: flex; gap: 14px; margin-bottom: 20px; align-items: flex-start; }
+  .feature-icon { width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: var(--blue-tint); display: flex; align-items: center; justify-content: center; }
+  .feature-title { font-weight: 600; font-size: 14.5px; }
+  .feature-sub { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+  .hero-panel { margin-top: 36px; border-radius: 16px; background: linear-gradient(160deg, #1D4ED8 0%, #2563EB 45%, #3B82F6 100%); height: 220px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .hero-panel svg { position: relative; z-index: 1; }
+  .hero-panel::before { content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%; background: rgba(255,255,255,0.08); top: -80px; right: -60px; }
+  .form-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px; box-shadow: var(--shadow); }
+  .form-header { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+  .form-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--blue-tint); display: flex; align-items: center; justify-content: center; }
+  .form-header h2 { font-size: 19px; margin: 0; }
+  .form-card > p.sub { color: var(--muted); font-size: 13.5px; margin: 4px 0 24px 50px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .field label .req { color: #DC2626; }
+  .field input, .field select { width: 100%; padding: 11px 13px; font-family: 'Inter', sans-serif; font-size: 14.5px; border: 1px solid var(--line); border-radius: 8px; background: #FBFCFE; color: var(--ink); appearance: none; }
+  .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748B' stroke-width='1.6' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+  button.checkin-btn { width: 100%; margin-top: 6px; padding: 15px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; background: var(--blue); color: white; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  button.checkin-btn:hover { background: var(--blue-dark); }
+  button.checkin-btn:disabled { opacity: 0.6; cursor: default; }
+  .error-box { display: none; margin-top: 14px; padding: 12px 14px; background: #FEF2F2; border: 1px solid #FECACA; color: #B91C1C; border-radius: 8px; font-size: 13px; }
+  @media (max-width: 880px) { .layout { grid-template-columns: 1fr; padding: 32px 20px 60px; } header { padding: 16px 20px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="#2563EB" stroke-width="3" stroke-linecap="round"/></svg></div>
+    <div><div class="brand-name">CareWell Hospital</div><div class="tagline">Better Care. Shorter Waits.</div></div>
+  </div>
+  <nav><a href="/index.html">Home</a><a href="#">About</a></nav>
+</header>
+
+<div class="layout">
+  <div class="welcome">
+    <h1>Welcome!</h1>
+    <p>Check in for your appointment and get your estimated wait time — updated live as the queue moves.</p>
+    <div class="feature"><div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" fill="#2563EB"/></svg></div><div><div class="feature-title">Real-time queue updates</div><div class="feature-sub">Your wait time refreshes automatically</div></div></div>
+    <div class="feature"><div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 19h16M6 15l4-5 3 3 5-7" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="feature-title">AI-powered wait time prediction</div><div class="feature-sub">Combines live queue data with machine learning</div></div></div>
+    <div class="feature"><div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3z" stroke="#2563EB" stroke-width="2" stroke-linejoin="round"/></svg></div><div><div class="feature-title">Better planning for your visit</div><div class="feature-sub">Know when to arrive, not just when to wait</div></div></div>
+    <div class="hero-panel">
+      <svg width="140" height="110" viewBox="0 0 140 110" fill="none">
+        <rect x="20" y="30" width="100" height="70" rx="6" fill="white" fill-opacity="0.95"/>
+        <rect x="32" y="42" width="18" height="18" fill="#93C5FD"/><rect x="58" y="42" width="18" height="18" fill="#93C5FD"/><rect x="84" y="42" width="18" height="18" fill="#93C5FD"/>
+        <rect x="32" y="68" width="18" height="18" fill="#BFDBFE"/><rect x="58" y="68" width="18" height="18" fill="#BFDBFE"/><rect x="84" y="68" width="18" height="18" fill="#BFDBFE"/>
+        <path d="M60 30V16l10-8 10 8v14" stroke="white" stroke-width="3" fill="none" stroke-linejoin="round"/>
+        <path d="M66 8h8M70 4v8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-header"><div class="form-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#2563EB" stroke-width="2"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#2563EB" stroke-width="2"/></svg></div><h2>Patient Check-In</h2></div>
+    <p class="sub">Please fill in the details below to check in.</p>
+    <div class="grid-2">
+      <div class="field"><label>Patient Name <span class="req">*</span></label><input id="patientName" type="text" placeholder="e.g. Ramesh Kumar" /></div>
+      <div class="field"><label>Department <span class="req">*</span></label>
+        <select id="department"><option value="">Select department</option><option>Cardiology</option><option>Emergency</option><option>General Surgery</option><option>Internal Medicine</option><option>Neurology</option><option>Obstetrics</option><option>Oncology</option><option>Orthopedics</option><option>Pediatrics</option><option>Radiology</option></select></div>
+      <div class="field"><label>Triage Category <span class="req">*</span></label>
+        <select id="triage"><option value="">Select triage category</option><option>Non-urgent</option><option>Semi-urgent</option><option>Urgent</option><option>Immediate</option><option>Emergency</option></select></div>
+      <div class="field"><label>Provider ID <span class="req">*</span></label>
+        <select id="provider"><option value="">Select provider</option><script>for(let i=1;i<=50;i++)document.write(`<option>DR${i}</option>`)</script></select></div>
+      <div class="field"><label>Age Group <span class="req">*</span></label><select id="ageGroup"><option value="">Select age group</option><option>Pediatric (0-17)</option><option>Young Adult (18-35)</option><option>Adult (36-60)</option><option>Senior (61+)</option></select></div>
+      <div class="field"><label>Appointment Type <span class="req">*</span></label><select id="appointmentType"><option value="">Select appointment type</option><option>New Patient</option><option>Follow-up</option><option>Specialist Referral</option><option>Urgent Care</option></select></div>
+      <div class="field"><label>Insurance Type <span class="req">*</span></label><select id="insuranceType"><option value="">Select insurance type</option><option>Private</option><option>Medicare</option><option>Medicaid</option><option>Self-pay</option></select></div>
+      <div class="field"><label>Arrival Method <span class="req">*</span></label><select id="arrivalMethod"><option value="">Select arrival method</option><option>Walk-in</option><option>Scheduled</option><option>Emergency</option></select></div>
+      <div class="field"><label>Day of Week</label><select id="dayOfWeek"><option>Mon</option><option>Tue</option><option>Wed</option><option>Thu</option><option>Fri</option><option>Sat</option><option>Sun</option></select></div>
+      <div class="field"><label>Booking Type <span class="req">*</span></label><select id="bookingType"><option value="">Select booking type</option><option>Online</option><option>Walk-in</option></select></div>
+    </div>
+    <button class="checkin-btn" id="checkinBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2M23 11h-6M20 8v6" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="white" stroke-width="2"/></svg>
+      Check In
+    </button>
+    <div class="error-box" id="errorBox"></div>
+  </div>
+</div>
+
+<script>
+  const API_BASE = "";
+  document.getElementById("checkinBtn").addEventListener("click", async () => {
+    const val = (id) => document.getElementById(id).value.trim();
+    const errorBox = document.getElementById("errorBox");
+    errorBox.style.display = "none";
+    const required = ["department","triage","provider","ageGroup","appointmentType","insuranceType","arrivalMethod","bookingType"];
+    for (const id of required) {
+      if (!val(id)) { errorBox.textContent = "Please fill in all required fields."; errorBox.style.display = "block"; return; }
+    }
+    const now = new Date();
+    const dayMap = {"Sun":0,"Mon":1,"Tue":2,"Wed":3,"Thu":4,"Fri":5,"Sat":6};
+    const dayOfWeek = val("dayOfWeek");
+    const patientId = (val("patientName") || "Patient").replace(/\s+/g, "_") + "_" + Math.floor(1000 + Math.random()*9000);
+    const payload = {
+      patient_id: patientId, department: val("department"), triage_category: val("triage"), provider_id: val("provider"),
+      age_group: val("ageGroup"), appointment_type: val("appointmentType"), insurance_type: val("insuranceType"),
+      arrival_method: val("arrivalMethod"), day_of_week: dayOfWeek, booking_type: val("bookingType"),
+      providers_on_shift: 3, nurses_on_shift: 5, facility_occupancy_rate: 0.6, is_online_booking: 0,
+      arrival_hour: now.getHours(), arrival_day_of_week: dayMap[dayOfWeek] ?? now.getDay(),
+      is_weekend: (dayMap[dayOfWeek] === 0 || dayMap[dayOfWeek] === 6) ? 1 : 0
+    };
+    const btn = document.getElementById("checkinBtn");
+    btn.disabled = true;
+    try {
+      const res = await fetch(`${API_BASE}/checkin`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      if (!res.ok) { const err = await res.json(); throw new Error(err.detail || "Check-in failed"); }
+      const data = await res.json();
+      const params = new URLSearchParams({ patient_id: data.patient_id, department: payload.department, triage: payload.triage_category });
+      window.location.href = `patient_status.html?${params.toString()}`;
+    } catch (e) {
+      errorBox.textContent = "Couldn't reach the server. (" + e.message + ")";
+      errorBox.style.display = "block";
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

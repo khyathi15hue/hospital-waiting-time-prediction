@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CareWell Hospital — Your Queue Status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F7FB; --card: #FFFFFF; --ink: #0F2A4A; --muted: #64748B; --line: #E2E8F0;
+    --blue: #2563EB; --blue-tint: #EFF4FE; --green: #16A34A; --green-tint: #ECFDF3;
+    --shadow: 0 1px 2px rgba(15,42,74,.04), 0 8px 24px rgba(15,42,74,.06);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+  h1, h2, .brand-name { font-family: 'Plus Jakarta Sans', sans-serif; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 18px 40px; background: var(--card); border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 40px; height: 40px; border-radius: 10px; background: var(--blue-tint); display: flex; align-items: center; justify-content: center; }
+  .brand-name { font-weight: 700; font-size: 18px; }
+  .tagline { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .menu-btn { width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .stage { max-width: 560px; margin: 0 auto; padding: 40px 20px 80px; }
+  .success-banner { display: flex; gap: 14px; align-items: flex-start; background: var(--green-tint); border: 1px solid #BBF7D0; border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+  .success-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .success-banner h2 { font-size: 17px; margin: 0 0 4px; color: #065F46; }
+  .success-banner p { font-size: 13.5px; color: #15803D; margin: 0; line-height: 1.5; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .stat-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .stat-label { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); margin-bottom: 8px; }
+  .stat-icon { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; }
+  .stat-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; }
+  .live-box { display: flex; justify-content: space-between; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .live-left { display: flex; align-items: center; gap: 10px; }
+  .live-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+  .live-title { font-weight: 600; font-size: 14px; }
+  .live-sub { font-size: 12px; color: var(--muted); }
+  .refresh-icon { cursor: pointer; }
+  .info-box { display: flex; gap: 12px; align-items: flex-start; background: var(--blue-tint); border: 1px solid #BFDBFE; border-radius: 12px; padding: 16px 18px; margin-bottom: 20px; font-size: 13.5px; color: #1E3A8A; line-height: 1.5; }
+  .info-box b { display: block; margin-bottom: 2px; }
+  .view-queue-btn { width: 100%; padding: 15px; font-size: 15px; font-weight: 700; background: var(--blue); color: white; border: none; border-radius: 10px; cursor: pointer; }
+  .view-queue-btn:hover { background: #1D4ED8; }
+  .queue-panel { display: none; margin-top: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .queue-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 18px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .queue-row:last-child { border-bottom: none; }
+  .queue-row.me { background: var(--blue-tint); }
+  .queue-row .pid { font-weight: 600; }
+  .queue-row .wait { color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="#2563EB" stroke-width="3" stroke-linecap="round"/></svg></div><div><div class="brand-name">CareWell Hospital</div><div class="tagline">Better Care. Shorter Waits.</div></div></div>
+  <div class="menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#0F2A4A" stroke-width="2" stroke-linecap="round"/></svg></div>
+</header>
+<div class="stage">
+  <div class="success-banner">
+    <div class="success-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div><h2>Check-in Successful!</h2><p>Your information has been received. Here is your current queue status:</p></div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label"><div class="stat-icon" style="background:#EFF4FE"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="#2563EB" stroke-width="2"/></svg></div>Token Number</div><div class="stat-value" id="tokenNumber">--</div></div>
+    <div class="stat-card"><div class="stat-label"><div class="stat-icon" style="background:#FEF2F2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-9-9c-1.3-3 1-6 4-6 2 0 3.5 1.2 5 3 1.5-1.8 3-3 5-3 3 0 5.3 3 4 6-2 4.5-9 9-9 9z" stroke="#DC2626" stroke-width="2"/></svg></div>Department</div><div class="stat-value" id="deptValue" style="font-size:17px;">--</div></div>
+    <div class="stat-card"><div class="stat-label"><div class="stat-icon" style="background:#F5F3FF"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="4" stroke="#7C3AED" stroke-width="2"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7" stroke="#7C3AED" stroke-width="2"/></svg></div>Your Queue Position</div><div class="stat-value" id="queuePos">#--</div></div>
+    <div class="stat-card"><div class="stat-label"><div class="stat-icon" style="background:#ECFDF3"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#16A34A" stroke-width="2"/><path d="M12 7v5l3 3" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/></svg></div>Estimated Wait Time</div><div class="stat-value" id="waitTime">~ -- min</div></div>
+  </div>
+  <div class="live-box">
+    <div class="live-left"><span class="live-dot"></span><div><div class="live-title">Live Updates</div><div class="live-sub">Updates every 5 seconds</div></div></div>
+    <div class="refresh-icon" onclick="refreshStatus()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4v5h5M20 20v-5h-5M4.5 9a8 8 0 0113.9-3M19.5 15a8 8 0 01-13.9 3" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/></svg></div>
+  </div>
+  <div class="info-box" id="infoBox">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="9" stroke="#1E3A8A" stroke-width="2"/><path d="M12 8v.01M12 11v5" stroke="#1E3A8A" stroke-width="2" stroke-linecap="round"/></svg>
+    <div><b id="infoText">Please arrive at the hospital in time for your consultation.</b></div>
+  </div>
+  <button class="view-queue-btn" onclick="toggleQueue()">View Queue Details</button>
+  <div class="queue-panel" id="queuePanel"></div>
+</div>
+<script>
+  const API_BASE = "";
+  const params = new URLSearchParams(window.location.search);
+  const patientId = params.get("patient_id");
+  const department = params.get("department");
+  document.getElementById("tokenNumber").textContent = patientId ? patientId.split("_").pop() : "--";
+  document.getElementById("deptValue").textContent = department || "--";
+  let queueVisible = false;
+  async function refreshStatus() {
+    if (!department) return;
+    try {
+      const res = await fetch(`${API_BASE}/queue/${department}`);
+      if (!res.ok) return;
+      const queue = await res.json();
+      const active = queue.filter(p => p.status === "waiting" || p.status === "in_progress");
+      const myIndex = active.findIndex(p => p.patient_id === patientId);
+      if (myIndex === -1) {
+        document.getElementById("queuePos").textContent = "Done";
+        document.getElementById("waitTime").textContent = "You're up";
+        document.getElementById("infoText").textContent = "Please proceed to the consultation room.";
+        return;
+      }
+      const me = active[myIndex];
+      document.getElementById("queuePos").textContent = "#" + (myIndex + 1);
+      document.getElementById("waitTime").textContent = "~ " + Math.round(me.predicted_wait_minutes) + " min";
+      const infoText = document.getElementById("infoText");
+      if (myIndex === 0) infoText.textContent = "You're next — please be near the consultation room.";
+      else if (myIndex <= 2) infoText.textContent = `Please arrive at the hospital when you are ${myIndex} patient(s) away.`;
+      else infoText.textContent = "You can wait comfortably — we'll update this page automatically.";
+      if (queueVisible) renderQueuePanel(active, myIndex);
+    } catch (e) {}
+  }
+  function toggleQueue() {
+    queueVisible = !queueVisible;
+    document.getElementById("queuePanel").style.display = queueVisible ? "block" : "none";
+    if (queueVisible) refreshStatus();
+  }
+  function renderQueuePanel(active, myIndex) {
+    const panel = document.getElementById("queuePanel");
+    panel.innerHTML = active.map((p, i) => `
+      <div class="queue-row ${i === myIndex ? 'me' : ''}">
+        <span class="pid">${i + 1}. ${p.patient_id}${i === myIndex ? ' (You)' : ''} — ${p.triage_category}</span>
+        <span class="wait">${Math.round(p.predicted_wait_minutes)} min</span>
+      </div>`).join("");
+  }
+  if (!patientId || !department) {
+    document.getElementById("infoText").textContent = "No check-in found. Please check in first.";
+  } else {
+    refreshStatus();
+    setInterval(refreshStatus, 5000);
+  }
+</script>
+</body>
+</html>
